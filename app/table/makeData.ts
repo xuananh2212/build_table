@@ -18,27 +18,24 @@ const range = (len: number) => {
   return arr;
 };
 
-const newPerson = (): Person => {
+const newPerson = (index) => {
   return {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    age: faker.number.int(40),
-    visits: faker.number.int(1000),
+    stt: index,
+    id: faker.datatype.uuid(),
+    unit: faker.address.streetName(),
+    levelOrganization: faker.address.streetName(),
+    history: faker.date.past(30),
     progress: faker.number.int(100),
-    status: faker.helpers.shuffle<Person["status"]>([
-      "relationship",
-      "complicated",
-      "single",
-    ])[0]!,
+    status: faker.helpers.shuffle(["relationship", "complicated", "single"])[0],
   };
 };
 
 export function makeData(...lens: number[]) {
   const makeDataLevel = (depth = 0): Person[] => {
     const len = lens[depth]!;
-    return range(len).map((d): Person => {
+    return range(len).map((d, index): Person => {
       return {
-        ...newPerson(),
+        ...newPerson(index + 1),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
       };
     });
